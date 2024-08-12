@@ -11,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'admin',
       password: 'admin',
       database: 'nest_base',
+      logging: false,
       // entities: [Task],
       autoLoadEntities: true,
       synchronize: true, // This line will drop and recreate your database every time you run your application. Replace it with `false` in a production environment.

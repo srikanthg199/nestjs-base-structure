@@ -16,6 +16,13 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*": ["*"],
+      "@constants": ["constants"],
+      "@interfaces": ["interfaces"],
+      "@services": ["services"],
+      "@utils": ["utils"]
+    }
   }
 }

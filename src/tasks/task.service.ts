@@ -5,7 +5,6 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksRepository } from './tasks.repository';
 import { PaginatedFilterOptions } from '../interfaces';
 import { getPaginatedFilter } from '../utils/common.utils';
-import { ILike } from 'typeorm';
 import { TaskStatus } from './task.status';
 
 @Injectable()
@@ -36,28 +35,39 @@ export class TasksService {
   ): Promise<Task[]> {
     const { status, search, ...paginationOptions } = options;
     // const searchableFields = ['title', 'description'];
-    const { where, order, skip, take } = getPaginatedFilter(
+    const { order, skip, take } = getPaginatedFilter(
       this.tasksRepository,
       paginationOptions,
     );
-    // Apply entity-specific filters
+    const query = this.tasksRepository.createQueryBuilder('task');
     if (status) {
-      // Ensure whereCondition is an array if search filters are used
-      where['status'] = {
-        status: ILike(status), // Apply ILike for case-insensitive search
-      };
+      query.andWhere('task.status = :status', { status: status });
     }
     if (search) {
+      query.andWhere(
+        'task.title ILIKE :search OR task.description ILIKE :search',
+        {
+          search: `%${search}%`,
+        },
+      );
     }
-    const tasks = await this.tasksRepository.getTasks({
-      where,
-      order,
-      take,
-      skip,
+    // Apply pagination and sorting
+    query.skip(skip).take(take);
+    // Apply sorting with type assertion
+    Object.entries(order).forEach(([field, direction]) => {
+      query.addOrderBy(`task.${field}`, direction as 'ASC' | 'DESC'); // Type assertion here
     });
+    // Get paginated results
+    const tasks = await query.getMany();
     return tasks;
   }
-  async deleteTask(taskId: string): Promise<unknown> {
-    return await this.tasksRepository.deleteTask(taskId);
+  async deleteTask(taskId: string): Promise<void> {
+    const filter = { id: taskId };
+    await this.tasksRepository.deleteTask(filter);
+  }
+
+  async updateTask(taskId: string, updateData: Partial<Task>): Promise<void> {
+    const filter = { id: taskId };
+    await this.tasksRepository.updateTask(filter, updateData);
   }
 }

@@ -5,6 +5,7 @@ import {
   Get,
   InternalServerErrorException,
   Param,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -41,5 +42,14 @@ export class TasksController {
   async deleteTask(@Param('taskId') taskId: string): Promise<unknown> {
     await this.tasksService.deleteTask(taskId);
     return { message: 'Task deleted successfully' };
+  }
+
+  @Patch(':taskId')
+  async updateTask(
+    @Param('taskId') taskId: string,
+    @Body() updateData: Partial<Task>,
+  ): Promise<unknown> {
+    await this.tasksService.updateTask(taskId, updateData);
+    return { message: 'Task updated successfully' };
   }
 }

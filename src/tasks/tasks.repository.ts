@@ -31,23 +31,29 @@ export class TasksRepository extends Repository<Task> {
 
   async getTasks(filter: object) {
     try {
-      console.log(filter);
       const taskData = await this.find(filter);
       console.log(taskData);
       return taskData;
     } catch (error) {
-      console.log(error);
-
       throw new InternalServerErrorException('Failed to retrieve tasks');
     }
   }
 
-  async deleteTask(taskId: string): Promise<unknown> {
+  async deleteTask(filter: object): Promise<unknown> {
     try {
-      return await this.delete({ id: taskId });
+      return await this.delete(filter);
     } catch (error) {
       // handle error if task not found or any other issues
       throw new InternalServerErrorException('Failed to delete task');
+    }
+  }
+
+  async updateTask(filter: object, updateData: object): Promise<unknown> {
+    try {
+      return await this.update(filter, updateData);
+    } catch (error) {
+      // handle error if task not found or any other issues
+      throw new InternalServerErrorException('Failed to update task');
     }
   }
 }

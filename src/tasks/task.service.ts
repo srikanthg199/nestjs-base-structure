@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksRepository } from './tasks.repository';
-import { TaskStatus } from './task.status';
 import { PaginatedFilterOptions } from '../interfaces';
 import { getPaginatedFilter } from '../utils/common.utils';
-import { FindOptionsWhereProperty, ILike } from 'typeorm';
+import { ILike } from 'typeorm';
+import { TaskStatus } from './task.status';
 
 @Injectable()
 export class TasksService {
@@ -35,21 +35,20 @@ export class TasksService {
     options: PaginatedFilterOptions & { status: string },
   ): Promise<Task[]> {
     const { status, search, ...paginationOptions } = options;
-    const searchableFields = ['title', 'description'];
-    let { where, order, skip, take } = getPaginatedFilter(
+    // const searchableFields = ['title', 'description'];
+    const { where, order, skip, take } = getPaginatedFilter(
       this.tasksRepository,
       paginationOptions,
     );
     // Apply entity-specific filters
     if (status) {
       // Ensure whereCondition is an array if search filters are used
-      where = {
-        ...where,
+      where['status'] = {
         status: ILike(status), // Apply ILike for case-insensitive search
       };
     }
-    // if (search) {
-    // }
+    if (search) {
+    }
     const tasks = await this.tasksRepository.getTasks({
       where,
       order,

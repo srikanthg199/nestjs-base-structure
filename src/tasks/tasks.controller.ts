@@ -8,10 +8,10 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { TasksService } from './tasks.service';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { PaginatedFilterOptions } from '../interfaces';
+import { TasksService } from './task.service';
 @Controller('tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}

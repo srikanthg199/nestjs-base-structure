@@ -19,10 +19,10 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@/*": ["*"],
-      "@constants": ["constants"],
-      "@interfaces": ["interfaces"],
-      "@services": ["services"],
-      "@utils": ["utils"]
+      "@constants/*": ["src/constants/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }

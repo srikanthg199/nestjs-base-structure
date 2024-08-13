@@ -8,12 +8,15 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { PaginatedFilterOptions } from '../interfaces';
 import { TasksService } from './task.service';
+import { AuthGuard } from '@nestjs/passport';
 @Controller('tasks')
+@UseGuards(AuthGuard())
 export class TasksController {
   constructor(private tasksService: TasksService) {}
   @Post()
@@ -25,7 +28,6 @@ export class TasksController {
   async getTasks(
     @Query() query: PaginatedFilterOptions & { status: string },
   ): Promise<Task[]> {
-    console.log(/q/, query);
     try {
       return this.tasksService.getTasks(query);
     } catch (error) {

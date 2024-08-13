@@ -1,4 +1,4 @@
-import { Repository, FindManyOptions, FindOptionsOrder } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { globalConstants } from '../constants';
 
 interface PaginatedFilterOptions {

@@ -36,7 +36,24 @@ export class UserService {
   }
 
   async getUser(userId: string): Promise<User | undefined> {
-    return await this.userRepository.getUser({ where: { id: userId } });
+    return await this.userRepository.getUser({
+      where: { id: userId },
+      relations: ['task'],
+    });
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.task', 'task')
+      .select([
+        'user.id',
+        'user.email',
+        // Optionally include other user fields if needed
+        'task.id',
+        'task.title',
+        'task.status',
+        // Exclude 'task.description'
+      ])
+      .where('user.id = :userId', { userId })
+      .getOne();
   }
 
   async getUsers(): Promise<User[] | undefined> {

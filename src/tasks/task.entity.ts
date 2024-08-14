@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TaskStatus } from './task.status';
+import { User } from '../user/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Task {
@@ -15,12 +17,7 @@ export class Task {
   @Column()
   status: TaskStatus;
 
-  // @Column()
-  // created_at: Date;
-
-  // @Column()
-  // updated_at: Date;
-
-  // @Column()
-  // deleted_at: Date;
+  @ManyToOne(() => User, (user) => user.task, { eager: false })
+  @Exclude({ toPlainOnly: true })
+  user: User;
 }

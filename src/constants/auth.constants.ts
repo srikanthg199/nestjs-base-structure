@@ -1,4 +1,4 @@
 export const authConstants = Object.freeze({
-  jwtSecret: 'my-jwt-secret', //Get From Env
+  jwtSecret: 'M4Rjepm92YxqXam*kXJqfEMk%6Cvwt?Dkmj63zYVFCj', //Get From Env
   expireIn: 3600,
 });

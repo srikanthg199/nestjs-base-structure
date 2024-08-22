@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
@@ -15,7 +15,11 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
   async createUser(createUserDto: CreateUserDto): Promise<void> {
-    const { password } = createUserDto;
+    const { password, email } = createUserDto;
+    const user = await this.userRepository.getUser({ where: { email } });
+    if (user) {
+      throw new ConflictException('Email already exists');
+    }
     const hashPassword = await generateHash(password);
     createUserDto.password = hashPassword;
     await this.userRepository.createUser(createUserDto);
